@@ -34,18 +34,16 @@ class YdocConverter:
         # Note: Yprovider microservice accepts only raw token, which is not recommended
         return settings.Y_PROVIDER_API_KEY
 
-    def convert_markdown(self, text):
+    def convert(self, content, content_type):
         """Convert a Markdown text into our internal format using an external microservice."""
 
-        if not text:
-            raise ValidationError("Input text cannot be empty")
+        if not content:
+            raise ValidationError("Input content cannot be empty")
 
         try:
             response = requests.post(
                 f"{settings.Y_PROVIDER_API_BASE_URL}{settings.CONVERSION_API_ENDPOINT}/",
-                json={
-                    "content": text,
-                },
+                json={"content": content, "content_type": content_type},
                 headers={
                     "Authorization": self.auth_header,
                     "Content-Type": "application/json",

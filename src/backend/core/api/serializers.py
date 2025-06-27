@@ -408,8 +408,8 @@ class ServerCreateDocumentSerializer(serializers.Serializer):
             language = user.language or language
 
         try:
-            document_content = YdocConverter().convert_markdown(
-                validated_data["content"]
+            document_content = YdocConverter().convert(
+                validated_data["content"], "text/markdown"
             )
         except ConversionError as err:
             raise serializers.ValidationError(
