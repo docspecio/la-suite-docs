@@ -148,6 +148,7 @@ run-backend: ## Start only the backend application and all needed services
 	@$(COMPOSE) up --force-recreate -d celery-dev
 	@$(COMPOSE) up --force-recreate -d y-provider-development
 	@$(COMPOSE) up --force-recreate -d nginx
+	@$(COMPOSE) up --force-recreate -d docspec
 .PHONY: run-backend
 
 run: ## start the wsgi (production) and development server

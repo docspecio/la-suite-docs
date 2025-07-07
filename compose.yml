@@ -1,10 +1,15 @@
 name: docs
 
 services:
+  docspec:
+    image: ghcr.io/docspecio/api:0.1.0
+    ports:
+      - 4000:4000
+
   postgresql:
     image: postgres:16
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
       interval: 1s
       timeout: 2s
       retries: 300
@@ -31,7 +36,7 @@ services:
       - '9000:9000'
       - '9001:9001'
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: [ "CMD", "mc", "ready", "local" ]
       interval: 1s
       timeout: 20s
       retries: 300
@@ -73,20 +78,20 @@ services:
       - ./src/backend:/app
       - ./data/static:/data/static
     depends_on:
-        postgresql:
-            condition: service_healthy
-            restart: true
-        mailcatcher:
-          condition: service_started
-        redis:
-          condition: service_started
-        createbuckets:
-          condition: service_started
+      postgresql:
+        condition: service_healthy
+        restart: true
+      mailcatcher:
+        condition: service_started
+      redis:
+        condition: service_started
+      createbuckets:
+        condition: service_started
   
   celery-dev:
     user: ${DOCKER_USER:-1000}
     image: impress:backend-development
-    command: ["celery", "-A", "impress.celery_app", "worker", "-l", "DEBUG"]
+    command: [ "celery", "-A", "impress.celery_app", "worker", "-l", "DEBUG" ]
     environment:
       - DJANGO_CONFIGURATION=Development
     env_file:
@@ -113,7 +118,7 @@ services:
 
   frontend-development:
     user: "${DOCKER_USER:-1000}"
-    build: 
+    build:
       context: .
       dockerfile: ./src/frontend/Dockerfile
       target: impress-dev
@@ -142,13 +147,13 @@ services:
     image: node:22
     user: "${DOCKER_USER:-1000}"
     environment:
-      HOME: /tmp 
+      HOME: /tmp
     volumes:
       - ".:/app"
 
   y-provider-development:
     user: ${DOCKER_USER:-1000}
-    build: 
+    build:
       context: .
       dockerfile: ./src/frontend/servers/y-provider/Dockerfile
       target: y-provider-development
@@ -166,7 +171,7 @@ services:
   kc_postgresql:
     image: postgres:14.3
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
       interval: 1s
       timeout: 2s
       retries: 300
@@ -191,7 +196,7 @@ services:
       - --health-enabled=true
       - --metrics-enabled=true
     healthcheck:
-      test: ["CMD", "curl", "--head", "-fsS", "http://localhost:8080/health/ready"]
+      test: [ "CMD", "curl", "--head", "-fsS", "http://localhost:8080/health/ready" ]
       interval: 1s
       timeout: 2s
       retries: 300
